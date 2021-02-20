@@ -1,37 +1,126 @@
-## Welcome to GitHub Pages
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Mars</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="./Qgis2threejs.css">
+<script src="./threejs/three.min.js"></script>
+<script src="./threejs/OrbitControls.js"></script>
+<script src="./threejs/ViewHelper.js"></script>
+<script src="./Qgis2threejs.js"></script>
+</head>
+<body>
+<div id="view">
+  <div id="labels"></div>
+  <div id="northarrow"></div>
+  <div id="navigation"></div>
+</div>
 
-You can use the [editor on GitHub](https://github.com/IceCube1001/Mars_Spirit_Lander/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+<!-- popup -->
+<div id="popup">
+  <div id="closebtn">&times;</div>
+  <div id="popupbar"></div>
+  <div id="popupbody">
+    <div id="popupcontent"></div>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+    <!-- query result -->
+    <div id="queryresult">
+      <table id="qr_layername_table">
+        <caption>Layer name</caption>
+        <tr><td id="qr_layername"></td></tr>
+      </table>
 
-### Markdown
+      <table id="qr_coords_table">
+        <caption>Clicked coordinates</caption>
+        <tr><td id="qr_coords"></td></tr>
+      </table>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+      <!-- camera actions -->
+      <div class="action-btn action-zoom" onclick="app.cameraAction.zoomIn(); app.closePopup();">Zoom in here</div>
+      <div class="action-btn action-move" onclick="app.cameraAction.move(); app.closePopup();">Move here</div>
+      <div class="action-btn action-orbit" onclick="app.cameraAction.orbit(); app.closePopup();">Orbit around here</div>
 
-```markdown
-Syntax highlighted code block
+      <!-- attributes -->
+      <table id="qr_attrs_table">
+        <caption>Attributes</caption>
+      </table>
+    </div>
 
-# Header 1
-## Header 2
-### Header 3
+    <!-- page info -->
+    <div id="pageinfo">
+      <h1>Current View URL</h1>
+      <div><input id="urlbox" type="text"></div>
 
-- Bulleted
-- List
+      <h1>Usage</h1>
+      <table id="usage">
+        <tr><td colspan="2" class="star">Mouse</td></tr>
+        <tr><td>Left button + Move</td><td>Orbit</td></tr>
+        <tr><td>Mouse Wheel</td><td>Zoom</td></tr>
+        <tr><td>Right button + Move</td><td>Pan</td></tr>
 
-1. Numbered
-2. List
+        <tr><td colspan="2" class="star">Keys</td></tr>
+        <tr><td>Arrow keys</td><td>Move Horizontally</td></tr>
+        <tr><td>Shift + Arrow keys</td><td>Orbit</td></tr>
+        <tr><td>Ctrl + Arrow keys</td><td>Rotate</td></tr>
+        <tr><td>Shift + Ctrl + Up / Down</td><td>Zoom In / Out</td></tr>
+        <tr><td>L</td><td>Toggle Label Visibility</td></tr>
+        <tr><td>R</td><td>Start / Stop Orbit Animation</td></tr>
+        <tr><td>W</td><td>Wireframe Mode</td></tr>
+        <tr><td>Shift + R</td><td>Reset Camera Position</td></tr>
+        <tr><td>Shift + S</td><td>Save Image</td></tr>
+      </table>
 
-**Bold** and _Italic_ and `Code` text
+      <h1>About</h1>
+      <div id="about">
+        This page was made with <a href="https://www.qgis.org/" target="_blank">QGIS</a> and <a href="https://github.com/minorua/Qgis2threejs" target="_blank">Qgis2threejs</a> plugin (version 2.6).
+        <div>Powered by <a href="https://threejs.org/" target="_blank">three.js</a>
+        <span id="lib_proj4js"> and <a href="https://trac.osgeo.org/proj4js/" target="_blank">Proj4js</a></span>.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-[Link](url) and ![Image](src)
-```
+<!-- progress bar -->
+<div id="progress"><div id="bar"></div></div>
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+<!-- header and footer -->
+<div id="header">Spirit Lander</div>
+<div id="footer"><span id="infobtn"><img src="./Qgis2threejs.png"></span> Data source: NASA</div>
 
-### Jekyll Themes
+<script>
+Q3D.Config.allVisible = true;
+Q3D.Config.northArrow.visible = true;
+Q3D.Config.northArrow.color = 0x5f0505;
+if (typeof proj4 === "undefined") document.getElementById("lib_proj4js").style.display = "none";
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/IceCube1001/Mars_Spirit_Lander/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+var container = document.getElementById("view"),
+    app = Q3D.application;
 
-### Support or Contact
+app.init(container);       // initialize viewer
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+// load the scene
+app.loadSceneFile("./data/index/scene.json", function (scene) {
+  // scene file has been loaded
+  app.start();
+}, function (scene) {
+  // all relevant files have been loaded
+
+});
+
+document.getElementById("infobtn").onclick = app.showInfo;
+</script>
+</body>
+</html>
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
